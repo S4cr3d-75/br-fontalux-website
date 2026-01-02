@@ -1,0 +1,11 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Netlify Forms
+[context.production.environment]
+  ENABLE_NETLIFY_FORMS = "true"
