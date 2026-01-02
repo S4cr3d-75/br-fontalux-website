@@ -42,63 +42,23 @@ function setupPageInteractions() {
         });
     });
     
-    // Configurar formulario con Web3Forms
+    // Configurar formulario con FormSubmit
     const contactForm = document.querySelector('.contact-form');
     if (contactForm) {
-        console.log('✓ Formulario encontrado (Web3Forms)');
+        console.log('✓ Formulario encontrado (FormSubmit)');
         contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const nombre = this.querySelector('input[name="nombre"]').value.trim();
-            const email = this.querySelector('input[name="email"]').value.trim();
-            const mensaje = this.querySelector('textarea[name="mensaje"]').value.trim();
-            
-            if (!nombre || !email || !mensaje) {
-                alert('Por favor completa todos los campos');
-                return;
-            }
-            
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Enviando...';
             submitBtn.disabled = true;
             
-            // Web3Forms API - Enviar a fontalux.mantenimiento@gmail.com
-            const formData = {
-                access_key: "2b7b8c4a-1a5a-4f7c-8e3d-5c2a1b8f9d4e",
-                name: nombre,
-                email: email,
-                message: mensaje,
-                subject: `Nuevo mensaje de contacto de ${nombre}`,
-                to_email: "fontalux.mantenimiento@gmail.com"
-            };
-            
-            fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('¡Mensaje enviado correctamente! Te contactaremos pronto.');
-                    contactForm.reset();
-                    console.log('✓ Email enviado correctamente');
-                } else {
-                    alert('Error al enviar. Por favor intenta de nuevo.');
-                    console.error('Error:', data);
-                }
+            // FormSubmit maneja el envío automáticamente
+            // Solo mostrar confirmación después
+            setTimeout(() => {
+                alert('¡Mensaje enviado correctamente! Te contactaremos pronto.');
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
-            })
-            .catch(error => {
-                alert('Error al enviar. Por favor intenta de nuevo.');
-                console.error('Error:', error);
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            });
+            }, 1500);
         });
     }
     
