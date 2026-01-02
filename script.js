@@ -42,23 +42,44 @@ function setupPageInteractions() {
         });
     });
     
-    // Configurar formulario con FormSubmit
+    // Configurar formulario con Simple Email
     const contactForm = document.querySelector('.contact-form');
     if (contactForm) {
-        console.log('✓ Formulario encontrado (FormSubmit)');
+        console.log('✓ Formulario encontrado');
         contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nombre = this.querySelector('input[name="nombre"]').value.trim();
+            const email = this.querySelector('input[name="email"]').value.trim();
+            const mensaje = this.querySelector('textarea[name="mensaje"]').value.trim();
+            
+            if (!nombre || !email || !mensaje) {
+                alert('Por favor completa todos los campos');
+                return;
+            }
+            
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Enviando...';
             submitBtn.disabled = true;
             
-            // FormSubmit maneja el envío automáticamente
-            // Solo mostrar confirmación después
-            setTimeout(() => {
-                alert('¡Mensaje enviado correctamente! Te contactaremos pronto.');
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }, 1500);
+            // Abrir cliente de email con mailto
+            const subject = `Nuevo mensaje de contacto de ${nombre}`;
+            const body = `Nombre: ${nombre}\nEmail: ${email}\nMensaje:\n${mensaje}`;
+            const mailtoLink = `mailto:fontalux.mantenimiento@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            
+            // Copiar a portapapeles para comodidad
+            const fullMessage = `DE: ${email}\n\n${mensaje}`;
+            navigator.clipboard.writeText(fullMessage).then(() => {
+                alert('¡Abriendo tu cliente de email!\n\nSi no se abre automáticamente, copia este texto y envía un email a:\nfontalux.mantenimiento@gmail.com');
+                window.location.href = mailtoLink;
+                
+                setTimeout(() => {
+                    contactForm.reset();
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 1000);
+            });
         });
     }
     
